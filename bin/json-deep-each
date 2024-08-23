@@ -9,25 +9,13 @@ def deep_each(json, &block)
   yield(json)
 
   if json.is_a?(Hash)
-    json.each do |key, value|
-      deep_each([key, value], &block)
-    end
+    json.each { |key, value| deep_each([key, value], &block) }
   elsif json.is_a?(Array)
-    json.each do |element|
-      deep_each(element, &block)
-    end
+    json.each { |element| deep_each(element, &block) }
   end
 end
 
-parsed =
-  Dorian::Arguments.parse(
-    version: {
-      alias: :v
-    },
-    help: {
-      alias: :h
-    }
-  )
+parsed = Dorian::Arguments.parse(version: { alias: :v }, help: { alias: :h })
 
 abort parsed.help if parsed.options.help
 
@@ -39,7 +27,5 @@ inputs = parsed.files.map { |file| File.read(file) }
 inputs = [$stdin.each_line.to_a.map(&:strip).join("\n")] if inputs.empty?
 
 inputs.each do |input|
-  deep_each(JSON.parse(input)) do |it|
-    eval(parsed.arguments.join(" "))
-  end
+  deep_each(JSON.parse(input)) { |it| eval(parsed.arguments.join(" ")) }
 end
