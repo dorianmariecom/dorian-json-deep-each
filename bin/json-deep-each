@@ -6,7 +6,7 @@ require "dorian/to_struct"
 require "json"
 
 def deep_each(json, &block)
-  yield(json)
+  yield(json.to_deep_struct)
 
   if json.is_a?(Hash)
     json.each { |key, value| deep_each([key, value], &block) }
