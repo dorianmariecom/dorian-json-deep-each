@@ -20,12 +20,12 @@ parsed = Dorian::Arguments.parse(version: { alias: :v }, help: { alias: :h })
 abort parsed.help if parsed.options.help
 
 if parsed.options.version
-  abort File.read(File.expand_path("../../VERSION", __FILE__))
+  abort File.read(File.expand_path("../VERSION", __dir__))
 end
 
 inputs = parsed.files.map { |file| File.read(file) }
 inputs = [$stdin.each_line.to_a.map(&:strip).join("\n")] if inputs.empty?
 
 inputs.each do |input|
-  deep_each(JSON.parse(input)) { |it| eval(parsed.arguments.join(" ")) }
+  deep_each(JSON.parse(input)) { |_it| eval(parsed.arguments.join(" ")) }
 end
