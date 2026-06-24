@@ -1,28 +1,35 @@
-# `dorian-each`
+# `dorian-json-deep-each`
 
-Evaluates some code on each line of the input
+Run a Ruby snippet for a JSON value and each nested value.
 
-e.g. `ls -l | each "puts l.split.first"`
-
-### Install
+## Install
 
 ```bash
-gem install dorian-each
+gem install dorian-json-deep-each
 ```
 
-Or as part of my other gems:
+Also included in the aggregate gem:
 
 ```bash
 gem install dorian
 ```
 
-### Usage
-
-From my history:
+## Usage
 
 ```bash
-pbpaste | each "puts line.split('-')[1].split.first" | uniq
-git grep Thing test/ | grep isocode | each "puts l.split(':').first" | sort | uniq | xvim
-cat file.csv | each "code, name = l.split(\"\\t\"); if code.include?(','); puts code; else; puts code.gsub(' ', '') + ',' + name; end"
-git grep thing | grep " doc " | each "puts l.split(':').first" | xvim
+json-deep-each [file ...] "ruby code"
+```
+
+Run `json-deep-each -h` for generated option details and `json-deep-each -v` for the installed version.
+
+## Notes
+
+- Visits the root first, then arrays and hashes recursively. `it` is deep-structified before the snippet runs.
+
+## Examples
+
+### Print every visited value
+
+```bash
+echo '[1,2,3]' | json-deep-each "p it"
 ```
